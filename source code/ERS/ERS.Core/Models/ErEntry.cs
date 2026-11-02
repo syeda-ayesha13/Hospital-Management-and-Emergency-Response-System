@@ -4,15 +4,15 @@
     {
         public const double AgingRatePerMinute = 0.1;
 
-        public Patient Patient { get; }
+        public int PatientId { get; }
         public int TriageLevel { get; }
         public int ArrivalMinute { get; }
         public long ArrivalOrder { get; }
         public double AgingKey { get; }
 
-        public ErEntry(Patient patient, int triageLevel, int arrivalMinute, long arrivalOrder)
+        public ErEntry(int patientId, int triageLevel, int arrivalMinute, long arrivalOrder)
         {
-            Patient = patient;
+            PatientId = patientId;
             TriageLevel = triageLevel;
             ArrivalMinute = arrivalMinute;
             ArrivalOrder = arrivalOrder;
