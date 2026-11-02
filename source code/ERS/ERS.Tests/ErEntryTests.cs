@@ -6,14 +6,11 @@ namespace ERS.Tests
 {
     public class ErEntryTests
     {
-        private static Patient P(int id, string name) =>
-            new Patient(id, name, 0, DateTime.MinValue, 0);
-
         [Fact]
         public void OldLowPriority_BeatsNewHigherPriority()
         {
-            var a = new ErEntry(P(1, "A"), triageLevel: 2, arrivalMinute: 0, arrivalOrder: 0);
-            var b = new ErEntry(P(2, "B"), triageLevel: 4, arrivalMinute: 30, arrivalOrder: 1);
+            var a = new ErEntry(1, 2, 0, 0);
+            var b = new ErEntry(2, 4, 30, 1);
 
             Assert.True(a.CompareTo(b) > 0);
 
@@ -21,14 +18,14 @@ namespace ERS.Tests
             heap.Insert(b);
             heap.Insert(a);
 
-            Assert.Equal("A", heap.ExtractMax().Patient.Name);
+            Assert.Equal(1, heap.ExtractMax().PatientId);
         }
 
         [Fact]
         public void SameArrivalMinute_HigherTriageWins()
         {
-            var low = new ErEntry(P(1, "Low"), 2, 10, 0);
-            var high = new ErEntry(P(2, "High"), 5, 10, 1);
+            var low = new ErEntry(1, 2, 10, 0);
+            var high = new ErEntry(2, 5, 10, 1);
 
             Assert.True(high.CompareTo(low) > 0);
         }
@@ -36,8 +33,8 @@ namespace ERS.Tests
         [Fact]
         public void EqualKeys_EarlierArrivalWins()
         {
-            var first = new ErEntry(P(1, "First"), 3, 0, 0);    // key 3.0
-            var second = new ErEntry(P(2, "Second"), 4, 10, 1); // key 4 - 1.0 = 3.0
+            var first = new ErEntry(1, 3, 0, 0);    // key 3.0
+            var second = new ErEntry(2, 4, 10, 1); // key 4 - 1.0 = 3.0
 
             Assert.True(first.CompareTo(second) > 0);
         }
