@@ -1,0 +1,19 @@
+,value
+Total emergencies,1169
+Ambulance cases (%),60.8
+Critical cases - severity 1-2 (%),30.9
+Avg response time (min),29.8
+Median response time (min),23.2
+90th percentile response (min),63.6
+Responses over 30 min (%),24.9
+Avg bed occupancy (%),4.2
+Peak bed occupancy (%),12.6
+Avg bed stay (days),4.6
+Busiest emergency hour,9
+Busiest day,Sunday
+Most common emergency,Road Traffic Accident
+Admitted from emergency (%),27.2
+Appointment no-show rate (%),10.2
+Alerts raised,260
+Avg alert resolution (min),127.8
+Total patients,1500

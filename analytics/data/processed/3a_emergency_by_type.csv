@@ -1,0 +1,15 @@
+emergency_Type,cases,avg_severity
+Road Traffic Accident,210,2.76
+Respiratory Distress,131,2.93
+Abdominal / GI Emergency,126,3.46
+Chest Pain / Cardiac,119,2.76
+Fever / Infection,103,3.66
+Fall / Fracture,93,3.47
+Obstetric Emergency,90,2.7
+Neurological (Stroke/Seizure),58,2.41
+Diabetic Emergency,55,2.96
+Poisoning / Overdose,48,3.33
+Assault / Trauma,42,3.12
+Burns,37,2.81
+Heat Stroke,34,2.94
+Allergic Reaction,23,3.48
