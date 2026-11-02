@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="ERS.ConsoleDemo/ERS.ConsoleDemo.csproj" />
+  <Project Path="ERS.Core/ERS.Core.csproj" />
+  <Project Path="ERS.Tests/ERS.Tests.csproj" />
   <Project Path="ERS/ERS.csproj" />
 </Solution>
