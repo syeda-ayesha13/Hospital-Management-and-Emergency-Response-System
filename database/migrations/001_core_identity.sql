@@ -44,15 +44,18 @@ GO
 
 /* 1b. SQL Server blocks ALTER COLUMN while a CHECK depends on the column,
        so drop the old unnamed Gender check (re-added with a name below). */
-DECLARE @ck sysname;
+DECLARE @ck sysname, @sql NVARCHAR(400);
 SELECT @ck = cc.name
 FROM sys.check_constraints cc
 JOIN sys.columns c ON c.object_id = cc.parent_object_id AND c.column_id = cc.parent_column_id
 WHERE cc.parent_object_id = OBJECT_ID('dbo.Patients')
   AND c.name = 'Gender' AND cc.name <> 'CK_Patients_Gender';
-IF @ck IS NOT NULL EXEC('ALTER TABLE dbo.Patients DROP CONSTRAINT ' + QUOTENAME(@ck));
+IF @ck IS NOT NULL
+BEGIN
+    SET @sql = N'ALTER TABLE dbo.Patients DROP CONSTRAINT ' + QUOTENAME(@ck);
+    EXEC sys.sp_executesql @sql;
+END
 GO
-
 /* 1c. detail columns become nullable (temporary patients) */
 ALTER TABLE dbo.Patients ALTER COLUMN FName         VARCHAR(50)  NULL;
 ALTER TABLE dbo.Patients ALTER COLUMN LName         VARCHAR(50)  NULL;
