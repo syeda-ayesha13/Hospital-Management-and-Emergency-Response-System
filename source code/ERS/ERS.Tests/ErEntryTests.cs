@@ -1,4 +1,5 @@
-﻿using ERS.Core.DataStructures;
+﻿
+using System;
 using ERS.Core.Models;
 using Xunit;
 
@@ -7,36 +8,71 @@ namespace ERS.Tests
     public class ErEntryTests
     {
         [Fact]
-        public void OldLowPriority_BeatsNewHigherPriority()
+        public void Constructor_ShouldSetAllProperties()
         {
-            var a = new ErEntry(1, 2, 0, 0);
-            var b = new ErEntry(2, 4, 30, 1);
+            var reportedAt = new DateTime(2026, 11, 16, 10, 0, 0);
 
-            Assert.True(a.CompareTo(b) > 0);
+            var entry = new ErEntry(
+                101, 1, 90, 2, reportedAt);
 
-            var heap = new Heap<ErEntry>();
-            heap.Insert(b);
-            heap.Insert(a);
+            Assert.Equal(101, entry.EmergencyId);
+            Assert.Equal(1, entry.PatientId);
+            Assert.Equal(90, entry.PriorityScore);
+            Assert.Equal(2, entry.SeverityLevel);
+            Assert.Equal(reportedAt, entry.ReportedAt);
+        }
 
-            Assert.Equal(1, heap.ExtractMax().PatientId);
+        [Theory]
+        [InlineData(0)]
+        [InlineData(6)]
+        [InlineData(-1)]
+        public void Constructor_InvalidSeverity_ShouldThrowException(int severity)
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new ErEntry(101, 1, 90, severity, DateTime.Now));
         }
 
         [Fact]
-        public void SameArrivalMinute_HigherTriageWins()
+        public void CompareTo_HigherPriority_ShouldReturnGreaterValue()
         {
-            var low = new ErEntry(1, 2, 10, 0);
-            var high = new ErEntry(2, 5, 10, 1);
+            var e1 = new ErEntry(101, 1, 80, 3, DateTime.Now);
+            var e2 = new ErEntry(102, 2, 95, 1, DateTime.Now);
 
-            Assert.True(high.CompareTo(low) > 0);
+            Assert.True(e2.CompareTo(e1) > 0);
         }
 
         [Fact]
-        public void EqualKeys_EarlierArrivalWins()
+        public void CompareTo_EarlierReportTime_ShouldReturnGreaterValue()
         {
-            var first = new ErEntry(1, 3, 0, 0);    // key 3.0
-            var second = new ErEntry(2, 4, 10, 1); // key 4 - 1.0 = 3.0
+            var earlier = new ErEntry(
+                101, 1, 90, 2,
+                new DateTime(2026, 11, 16, 9, 0, 0));
 
-            Assert.True(first.CompareTo(second) > 0);
+            var later = new ErEntry(
+                102, 2, 90, 2,
+                new DateTime(2026, 11, 16, 10, 0, 0));
+
+            Assert.True(earlier.CompareTo(later) > 0);
+        }
+
+        [Fact]
+        public void CompareTo_Null_ShouldReturnOne()
+        {
+            var entry = new ErEntry(
+                101, 1, 90, 2, DateTime.Now);
+
+            Assert.Equal(1, entry.CompareTo(null));
+        }
+
+        [Fact]
+        public void CompareTo_EqualPriorityAndTime_ShouldReturnZero()
+        {
+            var time = new DateTime(2026, 11, 16, 10, 0, 0);
+
+            var e1 = new ErEntry(101, 1, 90, 2, time);
+            var e2 = new ErEntry(102, 2, 90, 2, time);
+
+            Assert.Equal(0, e1.CompareTo(e2));
         }
     }
 }
