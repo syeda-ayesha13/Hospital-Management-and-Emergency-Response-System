@@ -1,55 +1,99 @@
-﻿using System;
+﻿
 using ERS.Core.DataStructures;
 using Xunit;
 
-namespace ERS.Tests;
-
-public class HeapTests
+namespace ERS.Tests
 {
-    // Test-only item. Independent of Patient, so Patient can change freely.
-    private class Item : IComparable<Item>
+    public class HeapTests
     {
-        public string Name { get; }
-        public int Priority { get; }
-        public long Order { get; }
-
-        public Item(string name, int priority, long order)
+        [Fact]
+        public void Insert_ShouldMaintainMaxHeapProperty()
         {
-            Name = name;
-            Priority = priority;
-            Order = order;
+            var heap = new Heap<int>();
+
+            heap.Insert(30);
+            heap.Insert(50);
+            heap.Insert(20);
+            heap.Insert(70);
+
+            Assert.Equal(70, heap.Peek());
         }
 
-        public int CompareTo(Item? other)
+        [Fact]
+        public void ExtractMax_ShouldReturnElementsInDescendingOrder()
         {
-            if (other is null) return 1;
+            var heap = new Heap<int>();
 
-            int byPriority = Priority.CompareTo(other.Priority);
-            if (byPriority != 0) return byPriority;
+            heap.Insert(30);
+            heap.Insert(50);
+            heap.Insert(20);
+            heap.Insert(70);
 
-            return other.Order.CompareTo(Order); // earlier order wins ties
+            Assert.Equal(70, heap.ExtractMax());
+            Assert.Equal(50, heap.ExtractMax());
+            Assert.Equal(30, heap.ExtractMax());
+            Assert.Equal(20, heap.ExtractMax());
         }
-    }
 
-    [Fact]
-    public void ExtractMax_ServesByPriority_ThenArrivalOrder()
-    {
-        var heap = new Heap<Item>();
-        heap.Insert(new Item("A", 40, 0));
-        heap.Insert(new Item("B", 90, 1));
-        heap.Insert(new Item("C", 60, 2));
-        heap.Insert(new Item("D", 90, 3));   // ties with B
+        [Fact]
+        public void Count_ShouldUpdateAfterInsertAndExtract()
+        {
+            var heap = new Heap<int>();
 
-        Assert.Equal("B", heap.ExtractMax().Name);
-        Assert.Equal("D", heap.ExtractMax().Name);
-        Assert.Equal("C", heap.ExtractMax().Name);
-        Assert.Equal("A", heap.ExtractMax().Name);
-    }
+            heap.Insert(10);
+            heap.Insert(20);
 
-    [Fact]
-    public void ExtractMax_OnEmptyHeap_Throws()
-    {
-        var heap = new Heap<Item>();
-        Assert.Throws<InvalidOperationException>(() => heap.ExtractMax());
+            Assert.Equal(2, heap.Count);
+
+            heap.ExtractMax();
+
+            Assert.Equal(1, heap.Count);
+        }
+
+        [Fact]
+        public void IsEmpty_ShouldReturnCorrectValue()
+        {
+            var heap = new Heap<int>();
+
+            Assert.True(heap.IsEmpty);
+
+            heap.Insert(10);
+
+            Assert.False(heap.IsEmpty);
+
+            heap.ExtractMax();
+
+            Assert.True(heap.IsEmpty);
+        }
+
+        [Fact]
+        public void Peek_ShouldNotRemoveElement()
+        {
+            var heap = new Heap<int>();
+
+            heap.Insert(40);
+            heap.Insert(60);
+
+            Assert.Equal(60, heap.Peek());
+            Assert.Equal(2, heap.Count);
+        }
+
+        [Fact]
+        public void ExtractMax_OnEmptyHeap_ShouldThrowException()
+        {
+            var heap = new Heap<int>();
+
+            Assert.Throws<InvalidOperationException>(
+                () => heap.ExtractMax());
+        }
+
+        [Fact]
+        public void Peek_OnEmptyHeap_ShouldThrowException()
+        {
+            var heap = new Heap<int>();
+
+            Assert.Throws<InvalidOperationException>(
+                () => heap.Peek());
+        }
     }
 }

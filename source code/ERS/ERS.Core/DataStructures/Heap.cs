@@ -52,7 +52,13 @@ namespace ERS.Core.DataStructures
 
             return top;
         }
-
+        public void Rebuild()
+        {
+            for (int i = items.Count / 2 - 1; i >= 0; i--)
+            {
+                SiftDown(i);
+            }
+        }
         private void BubbleUp(int i)
         {
             while (i > 0 && items[i].CompareTo(items[Parent(i)]) > 0)
